@@ -13,17 +13,36 @@ from tabulate import tabulate
 
 #funtions for the Querys
 def all_pieces():
-    '''Deplay all infomation of all pieces'''
+    '''Deplay all infomation of all pieces in the Āhua_Gallery'''
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
         qrl = "SELECT * FROM pieces;"
         cursor.execute(qrl)
         results = cursor.fetchall()
-        headings = ["player_id","piece_name","price","purchase status","material",
-                    "commission", "maker"]
+        headings = ["player_id","piece_name","price","purchase status",
+                    "material","commission", "maker"]
         alignments = ("left","left","left","left","center","center","center")
         #print resalts of query
-        print("All infomation of All Black players:\n")
+        print("All infomation of the peices in the Āhua_Gallery:\n")
+        print(tabulate(results, headings,tablefmt="plain",colalign=alignments))
+
+def all_sold():
+    '''Deplay all infomation of all pieces in the Āhua_Gallery that have sold'''
+    with sqlite3.connect(DATABASE) as db:
+        cursor = db.cursor()
+        qrl = '''SELECT pieces.piece_id, pieces.price, pieces.piece_name, 
+        customers.first_name, customers.last_name, customers.postal_address, 
+        customers.town, customers.postal_code FROM pieces JOIN customer_piece, 
+        customers ON customer_piece.piece_id = pieces.piece_id AND 
+        customer_piece.customer_id = customers.customer_id;'''
+        cursor.execute(qrl)
+        results = cursor.fetchall()
+        headings = ["piece_id","price","piece_name","first_name",
+                    "last_name","postal_address", "town", "postal_code"]
+        alignments = ("left","left","left","left","left","left","left","center")
+        #print resalts of query
+        print("All infomation of the peices in the Āhua_Gallery that have "
+              "sold:\n")
         print(tabulate(results, headings,tablefmt="plain",colalign=alignments))
 
 if __name__ == "__main__":
@@ -44,7 +63,7 @@ if __name__ == "__main__":
                 all_pieces()
                 count = "Exit"
             elif option == "2":
-                fly_half()
+                all_sold()
                 count = "Exit"
             elif option == "3":
                 most_points()
