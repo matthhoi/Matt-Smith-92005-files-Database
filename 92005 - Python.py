@@ -4,6 +4,7 @@ By: Matt Smith                                                      12/8/2024'''
 
 #all the constences
 DATABASE = "92005 - Database.SQlite"
+LOWEST_PRICE = 25
 
 #import staments
 import sqlite3
@@ -61,7 +62,7 @@ def all_under_price():
         alignments = ("left","left","center","left","left")
         #print resalts of query
         print("All usefull infomation of the peices in the Āhua_Gallery that "
-              "have sold:\n")
+              "are under a certain price:\n")
         print(tabulate(results, headings,tablefmt="plain",colalign=alignments))
 
 if __name__ == "__main__":
