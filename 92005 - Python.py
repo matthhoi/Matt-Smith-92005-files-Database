@@ -19,7 +19,7 @@ def all_pieces():
         qrl = "SELECT * FROM pieces;"
         cursor.execute(qrl)
         results = cursor.fetchall()
-        headings = ["player_id","piece_name","price","purchase status",
+        headings = ["piece_id","piece_name","price","purchase status",
                     "material","commission", "maker"]
         alignments = ("left","left","left","left","center","center","center")
         #print resalts of query
@@ -27,7 +27,8 @@ def all_pieces():
         print(tabulate(results, headings,tablefmt="plain",colalign=alignments))
 
 def all_sold():
-    '''Deplay all infomation of all pieces in the Āhua_Gallery that have sold'''
+    '''Deplay all usefull infomation of all pieces in the Āhua_Gallery that 
+    have sold'''
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
         qrl = '''SELECT pieces.piece_id, pieces.price, pieces.piece_name, 
@@ -41,8 +42,26 @@ def all_sold():
                     "last_name","postal_address", "town", "postal_code"]
         alignments = ("left","left","left","left","left","left","left","center")
         #print resalts of query
-        print("All infomation of the peices in the Āhua_Gallery that have "
-              "sold:\n")
+        print("All usefull infomation of the peices in the Āhua_Gallery that "
+              "have sold:\n")
+        print(tabulate(results, headings,tablefmt="plain",colalign=alignments))
+
+def all_under_price():
+    '''Deplay all usefull infomation of all pieces in the Āhua_Gallery that 
+    have sold'''
+    with sqlite3.connect(DATABASE) as db:
+        cursor = db.cursor()
+        price = int(input("Sort by what price?"))
+        os.system("cls")
+        qrl = f'''SELECT piece_id, piece_name, price, material, maker FROM 
+        pieces WHERE price <= {price} AND purchase_status = 'Avalbile';'''
+        cursor.execute(qrl)
+        results = cursor.fetchall()
+        headings = ["piece_id","piece_name","price","material","maker",]
+        alignments = ("left","left","center","left","left")
+        #print resalts of query
+        print("All usefull infomation of the peices in the Āhua_Gallery that "
+              "have sold:\n")
         print(tabulate(results, headings,tablefmt="plain",colalign=alignments))
 
 if __name__ == "__main__":
@@ -54,10 +73,9 @@ if __name__ == "__main__":
         print("1. ")
         print("2. ")
         print("3. ")
-        print("4. ")
-        print("5. Exit")
+        print("4. Exit")
         while count != "Exit":
-            option = input("choose an option from the menu 1, 2, 3, 4, and 5: ")
+            option = input("Choose an option from the menu 1, 2, 3, and 4: ")
             os.system("cls")
             if option == "1":
                 all_pieces()
@@ -66,12 +84,9 @@ if __name__ == "__main__":
                 all_sold()
                 count = "Exit"
             elif option == "3":
-                most_points()
+                all_under_price()
                 count = "Exit"
             elif option == "4":
-                started_after_2010_50_tests()
-                count = "Exit"
-            elif option == "5":
                 print("Goodbye.........")
                 exit()
             else:
