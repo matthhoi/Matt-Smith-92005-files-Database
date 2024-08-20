@@ -1,2 +1,2 @@
 -- SQLite
-SELECT * FROM pieces
+SELECT piece_id, piece_name, price, material, maker FROM pieces;
