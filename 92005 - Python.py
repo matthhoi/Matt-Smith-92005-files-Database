@@ -69,6 +69,33 @@ def all_under_price():
                        tabulate(results, headings,tablefmt="plain",
                                 colalign=alignments), "MENU")
 
+def specific_customers():
+    '''Deplay infomation on specific customers in the Āhua_Gallery'''
+    with sqlite3.connect(DATABASE) as db:
+        cursor = db.cursor()
+        qrl = f'''SELECT first_name FROM customers;'''
+        cursor.execute(qrl)
+        customers = cursor.fetchall()
+        option = easygui.choicebox("---------MENU---------", "MENU", customers)
+        option = str(option)
+        option = option.replace("(", "")
+        option = option.replace("'", "")
+        option = option.replace(")", "")
+        option = option.replace(",", "")
+        os.system("cls")
+        price = 350
+        qrl = f'''SELECT first_name, last_name, postal_address, town, 
+        postal_code FROM customers WHERE first_name = '{option}';'''
+        cursor.execute(qrl)
+        results = cursor.fetchall()
+        headings = ["first_name","last_name","postal_address","town",
+                    "postal_code"]
+        alignments = ("left","left","center","left","left")
+        #print resalts of query
+        easygui.msgbox("infomation on specific customers in the Āhua_Gallery:\n" 
+                       + tabulate(results, headings,tablefmt="plain", 
+                                  colalign=alignments), "MENU")
+
 #gui interface
 if __name__ == "__main__":
     count = "i"
@@ -77,7 +104,7 @@ if __name__ == "__main__":
         possible_querys = ["1. Deplaying all infomation of pieces", "2. "
                            "Deplaying all pieces that have sold", "3. Deplaying"
                            " all peices that are under a certain price", "4. "
-                           "Exit"]
+                           "Deplay infomation on specific customers", "5. Exit"]
         while count != "Exit":
             option = easygui.choicebox("---------MENU---------", "MENU", 
                                        possible_querys)
@@ -87,7 +114,9 @@ if __name__ == "__main__":
                 all_sold()
             elif option == "3. Deplaying all peices that are under a certain price":
                 all_under_price()
-            elif option == "4. Exit":
+            elif option == "4. Deplay infomation on specific customers":
+                specific_customers()
+            elif option == "5. Exit":
                 easygui.msgbox("Goodbye.........", "MENU")
                 exit()
             else:
