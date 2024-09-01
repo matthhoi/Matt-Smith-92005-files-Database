@@ -55,7 +55,20 @@ def all_under_price():
     under a certain price'''
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
-        price = int(easygui.enterbox("Sort by what price?", "MENU"))
+        while True:
+            try:
+                price = int(easygui.enterbox("Sort by what price?", "MENU"))
+                exit
+            except:
+                price = int(easygui.enterbox("Please enter a number", "MENU"))
+            if price < LOWEST_PRICE:
+                try:
+                    price = int(easygui.enterbox("Please enter a number more "
+                                                 "than 25", "MENU"))
+                    break
+                except:
+                    price = int(easygui.enterbox("Please enter a number more "
+                                                 "than 25", "MENU"))
         os.system("cls")
         qrl = f'''SELECT piece_id, piece_name, price, material, maker FROM 
         pieces WHERE price <= {price} AND purchase_status = 'Avalbile';'''
