@@ -1,6 +1,6 @@
 '''A program to conect to the Āhua_Gallery database and run difrent queries on 
 it.
-By: Matt Smith                                                      12/8/2024'''
+By: Matt Smith                                                      6/9/2024'''
 
 #all the constences
 DATABASE = "92005 - Database.SQlite"
@@ -58,17 +58,12 @@ def all_under_price():
         while True:
             try:
                 price = int(easygui.enterbox("Sort by what price?", "MENU"))
-                exit
-            except:
-                price = int(easygui.enterbox("Please enter a number", "MENU"))
-            if price < LOWEST_PRICE:
-                try:
-                    price = int(easygui.enterbox("Please enter a number more "
-                                                 "than 25", "MENU"))
+                if price > LOWEST_PRICE:
                     break
-                except:
-                    price = int(easygui.enterbox("Please enter a number more "
-                                                 "than 25", "MENU"))
+                else:
+                    easygui.msgbox("Please enter a number more than 25", "MENU")
+            except:
+                easygui.msgbox("Please enter a number", "MENU")
         os.system("cls")
         qrl = f'''SELECT piece_id, piece_name, price, material, maker FROM 
         pieces WHERE price <= {price} AND purchase_status = 'Avalbile';'''
@@ -89,25 +84,31 @@ def specific_customers():
         qrl = f'''SELECT first_name FROM customers;'''
         cursor.execute(qrl)
         customers = cursor.fetchall()
-        option = easygui.choicebox("---------MENU---------", "MENU", customers)
-        option = str(option)
-        option = option.replace("(", "")
-        option = option.replace("'", "")
-        option = option.replace(")", "")
-        option = option.replace(",", "")
-        os.system("cls")
-        price = 350
-        qrl = f'''SELECT first_name, last_name, postal_address, town, 
-        postal_code FROM customers WHERE first_name = '{option}';'''
-        cursor.execute(qrl)
-        results = cursor.fetchall()
-        headings = ["first_name","last_name","postal_address","town",
-                    "postal_code"]
-        alignments = ("left","left","center","left","left")
-        #print resalts of query
-        easygui.msgbox("infomation on specific customers in the Āhua_Gallery:\n" 
-                       + tabulate(results, headings,tablefmt="plain", 
-                                  colalign=alignments), "MENU")
+        while True:
+            try:
+                option = easygui.choicebox("---------MENU---------", "MENU", 
+                                           customers)
+                option = str(option)
+                option = option.replace("(", "")
+                option = option.replace("'", "")
+                option = option.replace(")", "")
+                option = option.replace(",", "")
+                os.system("cls")
+                qrl = f'''SELECT first_name, last_name, postal_address, town, 
+                postal_code FROM customers WHERE first_name = '{option}';'''
+                cursor.execute(qrl)
+                results = cursor.fetchall()
+                headings = ["first_name","last_name","postal_address","town",
+                            "postal_code"]
+                alignments = ("left","left","center","left","left")
+                #print resalts of query
+                easygui.msgbox("infomation on specific customers in the "
+                            "Āhua_Gallery:\n" + 
+                            tabulate(results, headings, tablefmt="plain", 
+                                        colalign=alignments), "MENU")
+                break
+            except:
+                easygui.msgbox("Please choose one", "MENU")
 
 #gui interface
 if __name__ == "__main__":
@@ -129,8 +130,6 @@ if __name__ == "__main__":
                 all_under_price()
             elif option == "4. Deplay infomation on specific customers":
                 specific_customers()
-            elif option == "5. Exit":
-                easygui.msgbox("Goodbye.........", "MENU")
-                exit()
             else:
-                easygui.msgbox("This is not one of the options try again", "MENU")
+                easygui.msgbox("Goodbye", "MENU")
+                exit()
