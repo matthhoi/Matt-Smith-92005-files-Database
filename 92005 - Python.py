@@ -132,8 +132,7 @@ if __name__ == "__main__":
                 all_pieces()
             elif option == "2. Deplaying all pieces that have sold":
                 all_sold()
-            elif option == "3. Deplaying all peices that are under a certain\
-                            price":
+            elif option == "3. Deplaying all peices that are under a certain price":
                 all_under_price()
             elif option == "4. Deplay infomation on specific customers":
                 specific_customers()
