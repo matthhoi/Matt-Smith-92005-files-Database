@@ -45,7 +45,7 @@ def all_sold():
         cursor.execute(qrl)
         results = cursor.fetchall()
         headings = ["piece_id","price","piece_name","first_name",
-                    "last_name","postal_address"]
+                    "postal_address"]
         alignments = ("left","left","left","left","left")
         # print resalts of query
         easygui.msgbox("All usefull infomation of the peices in the "
