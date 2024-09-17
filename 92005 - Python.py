@@ -184,8 +184,12 @@ def update_data():
             buyer = easygui.choicebox("Who boght it?", "MENU", 
                                       ["New buyer", "Previous buyer"])
             if buyer == "Previous buyer":
-                costomer_id = easygui.enterbox("What is the costomer id?", 
-                                               "MENU")
+                try:
+                    costomer_id = int(easygui.enterbox("What is the costomer "
+                                                       "id?", "MENU"))
+                except:
+                    costomer_id = int(easygui.enterbox("Enter a number", 
+                                                        "MENU"))
                 qrl = f"""INSERT INTO pieces (piece_id, customer_id) VALUES 
                 ('{piece}', '{costomer_id}');"""
                 cursor.execute(qrl)
@@ -209,8 +213,12 @@ def update_data():
                 '{cust_last}', '{cust_address}', '{cust_town}', 
                 {cust_postal_code})"""
                 cursor.execute(qrl)
-                costomer_id = easygui.enterbox("What is the costomer id?", 
-                                               "MENU")
+                try:
+                    costomer_id = int(easygui.enterbox("What is the costomer "
+                                                       "id?", "MENU"))
+                except:
+                    costomer_id = int(easygui.enterbox("Enter a number", 
+                                                        "MENU"))
                 qrl = f"""INSERT INTO pieces (piece_id, customer_id) VALUES 
                 ('{piece}', '{costomer_id}');"""
                 cursor.execute(qrl)
