@@ -1,6 +1,6 @@
 """A program to conect to the Āhua_Gallery database and run difrent queries on 
 it.
-By: Matt Smith                                                      6/9/2024"""
+By: Matt Smith                                                      17/9/2024"""
 
 # all the constences
 DATABASE = "92005 - Database.SQlite"
@@ -116,6 +116,108 @@ def specific_customers():
                 easygui.msgbox("Please choose one", "MENU")
 
 
+def change_data():
+    """Being able to DELETE/INSERT data"""
+    with sqlite3.connect(DATABASE) as d_b:
+        cursor = d_b.cursor()
+        choce = easygui.choicebox("Do you whant to DELETE or INSERT data", 
+                                  "MENU", ["DELETE", "INSERT"])
+        if choce == "DELETE":
+            try:
+                piece = int(easygui.enterbox("Plese enter the piece id of the "
+                                            "piece you want to delete", "MENU"))
+            except:
+                piece = int(easygui.enterbox("Plese enter a number", "MENU"))
+            qrl = f"""DELETE FROM pieces WHERE piece_id = {piece};"""
+            cursor.execute(qrl)
+        elif choce == "INSERT":
+            piece_name = easygui.enterbox("What is the name of the piece?", 
+                                              "MENU")
+            try:
+                piece_price = int(easygui.enterbox("How much dose the piece "
+                                                   "cost?", "MENU"))
+            except:
+                piece_price = int(easygui.enterbox("Pleace enter a number", 
+                                                   "MENU"))
+            piece_material = easygui.enterbox("What is the piece made out of?", 
+                                              "MENU")
+            piece_commission = easygui.ynbox("Is this piece a commission", 
+                                             "MENU")
+            if piece_commission == "True":
+                piece_commission = "Yes"
+            else:
+                piece_commission = "No"
+            piece_maker = easygui.enterbox("Who is the maker?", "MENU")
+            qrl = f"""INSERT INTO pieces (piece_name, price, purchase_status, 
+            material, commission, maker) VALUES ('{piece_name}', '{piece_price}'
+            , 'Avalvbile', '{piece_material}', '{piece_commission}', 
+            '{piece_maker}');"""
+            cursor.execute(qrl)
+
+
+def update_data():
+    """Being able to UPDATE data"""
+    with sqlite3.connect(DATABASE) as d_b:
+        cursor = d_b.cursor()
+        try:
+            piece = int(easygui.enterbox("Plese enter the piece id of the "
+                                        "piece you want to update", "MENU"))
+        except:
+            piece = int(easygui.enterbox("Plese enter a number", "MENU"))
+        change = easygui.choicebox("What do you want to UPDATE", "MENU", 
+                                   ["piece_name", "price", "purchase_status"])
+        if change == "piece_name":
+            change_value = easygui.enterbox("What is the new name?", "MENU")
+            qrl = f"""UPDATE pieces SET {change} = "{change_value}" WHERE 
+            piece_id = {piece};"""
+        elif change == "price":
+            try:
+                change_value = int(easygui.enterbox("What is the new price?", 
+                                                    "MENU"))
+            except:
+                change_value = int(easygui.enterbox("Enter a number", "MENU"))
+            qrl = f"""UPDATE pieces SET {change} = {change_value} WHERE 
+            piece_id = {piece};"""
+        elif change == "purchase_status":
+            change_value = easygui.choicebox("What do you what to update to", 
+                                             "MENU", ["Avalbile", "Sold"])
+            buyer = easygui.choicebox("Who boght it?", "MENU", 
+                                      ["New buyer", "Previous buyer"])
+            if buyer == "Previous buyer":
+                costomer_id = easygui.enterbox("What is the costomer id?", 
+                                               "MENU")
+                qrl = f"""INSERT INTO pieces (piece_id, customer_id) VALUES 
+                ('{piece}', '{costomer_id}');"""
+                cursor.execute(qrl)
+            else:
+                cust_first = easygui.enterbox("What is the first name of the "
+                                             "customer?", "MENU")
+                cust_last = easygui.enterbox("What is the last name of the "
+                                               "customer?", "MENU")
+                cust_address = easygui.enterbox("What is the address of the "
+                                               "customer?", "MENU")
+                cust_town = easygui.enterbox("What is the town of the "
+                                               "customer?", "MENU")
+                try:
+                    cust_postal_code = int(easygui.enterbox("What is the postal"
+                                                            " code?", "MENU"))
+                except:
+                    cust_postal_code = int(easygui.enterbox("Enter a number", 
+                                                        "MENU"))
+                qrl = f"""INSERT INTO customers (first_name, last_name, 
+                postal_address, town, postal_code) VALUES ('{cust_first}', 
+                '{cust_last}', '{cust_address}', '{cust_town}', 
+                {cust_postal_code})"""
+                cursor.execute(qrl)
+                costomer_id = easygui.enterbox("What is the costomer id?", 
+                                               "MENU")
+                qrl = f"""INSERT INTO pieces (piece_id, customer_id) VALUES 
+                ('{piece}', '{costomer_id}');"""
+                cursor.execute(qrl)
+            qrl = f"""UPDATE pieces SET {change} = "{change_value}" WHERE 
+            piece_id = {piece};"""
+        cursor.execute(qrl)
+
 # gui interface
 if __name__ == "__main__":
     count = "i"
@@ -124,7 +226,8 @@ if __name__ == "__main__":
         possible_querys = ["1. Deplaying all infomation of pieces", "2. "
                            "Deplaying all pieces that have sold", "3. Deplaying"
                            " all peices that are under a certain price", "4. "
-                           "Deplay infomation on specific customers", "5. Exit"]
+                           "Deplay infomation on specific customers", "5. "
+                           "DELETE/INSERT data", "6. UPDATE data", "7. Exit"]
         while count != "Exit":
             option = easygui.choicebox("---------MENU---------", "MENU", 
                                        possible_querys)
@@ -136,6 +239,10 @@ if __name__ == "__main__":
                 all_under_price()
             elif option == "4. Deplay infomation on specific customers":
                 specific_customers()
+            elif option == "5. DELETE/INSERT data":
+                change_data()
+            elif option == "6. UPDATE data":
+                update_data()
             else:
                 easygui.msgbox("Goodbye", "MENU")
                 exit()
